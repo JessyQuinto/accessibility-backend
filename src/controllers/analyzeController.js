@@ -4,7 +4,7 @@ exports.analyzeURL = async (req, res) => {
     const { url } = req.body;
 
     if (!url) {
-        return res.status(400).json({ 
+        return res.status(400).json({
             status: 'error',
             message: 'URL no proporcionada',
             code: 'URL_REQUIRED'
