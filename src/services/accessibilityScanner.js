@@ -15,18 +15,14 @@ exports.scanPage = async (url) => {
         });
 
         const page = await browser.newPage();
-        
-        // Set reasonable timeout
-        await page.setDefaultNavigationTimeout(30000);
-        await page.setDefaultTimeout(30000);
 
-        // Navigate to URL with error handling
+        // Esperar a que el contenido se cargue completamente
         await page.goto(url, {
             waitUntil: 'networkidle2',
             timeout: 30000
         });
 
-        // Inject and run axe-core
+        // Inyectar axe-core y ejecutar el análisis
         await page.evaluate(axeCore.source);
 
         const results = await page.evaluate(() => {
@@ -34,18 +30,25 @@ exports.scanPage = async (url) => {
                 window.axe.run(document, {
                     runOnly: {
                         type: 'tag',
-                        values: ['wcag2a', 'wcag2aa']
+                        values: ['wcag2a', 'wcag2aa', 'wcag2aaa', 'best-practice', 'accessibility']
                     }
                 })
                 .then(results => {
                     const simplifiedResults = {
                         violations: results.violations.map(violation => ({
                             description: violation.description,
-                            impact: violation.impact,  // Impacto: serio, moderado, menor
+                            impact: violation.impact,
                             nodes: violation.nodes.length,
-                            wcag_reference: violation.helpUrl || "No disponible",  // Enlace a la documentación WCAG
-                            suggested_fix: violation.help || "Sugerencia no disponible",  // Sugerencia de corrección
-                            affected_nodes: violation.nodes.map(node => node.html)  // Código HTML de los nodos afectados
+                            wcag_reference: violation.helpUrl || "No disponible",
+                            suggested_fix: violation.help || "Sugerencia no disponible",
+                            affected_nodes: violation.nodes.map(node => ({
+                                html: node.html,
+                                node_details: {
+                                    tag: node.target[0].split(' ')[0],
+                                    location: node.target[0],
+                                    text_content: node.html
+                                }
+                            }))
                         }))
                     };
                     resolve(simplifiedResults);

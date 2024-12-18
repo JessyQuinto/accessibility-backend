@@ -20,6 +20,8 @@ exports.generatePDF = async (results, outputPath) => {
             // Resumen ejecutivo
             doc.fontSize(12).text(`Total de violaciones: ${results.violations.length}`);
             doc.fontSize(12).text(`Violaciones graves: ${results.violations.filter(v => v.impact === 'serious').length}`);
+            doc.fontSize(12).text(`Violaciones moderadas: ${results.violations.filter(v => v.impact === 'moderate').length}`);
+            doc.fontSize(12).text(`Violaciones menores: ${results.violations.filter(v => v.impact === 'minor').length}`);
             doc.moveDown();
 
             // Violaciones detalladas
@@ -30,6 +32,14 @@ exports.generatePDF = async (results, outputPath) => {
                 doc.text(`Referencia WCAG: ${violation.wcag_reference}`);
                 doc.text(`Sugerencia de corrección: ${violation.suggested_fix}`);
                 doc.moveDown();
+
+                violation.affected_nodes.forEach(node => {
+                    doc.fontSize(12).text(`Nodo HTML: ${node.html}`);
+                    doc.fontSize(12).text(`Etiqueta: ${node.node_details.tag}`);
+                    doc.fontSize(12).text(`Ubicación: ${node.node_details.location}`);
+                    doc.fontSize(12).text(`Contenido: ${node.node_details.text_content}`);
+                    doc.moveDown();
+                });
             });
 
             doc.end();

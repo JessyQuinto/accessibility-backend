@@ -7,20 +7,20 @@ require('dotenv').config();
 
 const app = express();
 
-// Basic middleware
+// Middleware básico
 app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 
-// Routes
+// Rutas
 app.use('/api', analyzeRoutes);
 
-// Health check endpoint
+// Endpoint de salud
 app.get('/', (req, res) => {
     res.send('API de accesibilidad funcionando');
 });
 
-// Basic error handler
+// Manejador de errores básico
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({
