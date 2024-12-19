@@ -2,6 +2,8 @@
 const documentAnalyzer = require('../services/documentAnalyzer');
 const multer = require('multer');
 const path = require('path');
+const accessibilityValidator = require('../services/accessibilityValidator');
+const documentExporter = require('../services/documentExporter');
 
 // Configuración de multer
 const storage = multer.diskStorage({
@@ -29,12 +31,11 @@ const upload = multer({
         fileSize: 5 * 1024 * 1024 // 5MB
     },
     fileFilter: fileFilter
-}).single('file'); // Asegúrate de que esto coincida con el nombre del campo en tu petición
+}).single('file');
 
 const analyzeFile = async (req, res) => {
     upload(req, res, async function(err) {
         if (err instanceof multer.MulterError) {
-            // Error de Multer
             return res.status(400).json({
                 status: 'error',
                 message: 'Error al subir el archivo',
@@ -42,7 +43,6 @@ const analyzeFile = async (req, res) => {
                 details: err.message
             });
         } else if (err) {
-            // Otro tipo de error
             return res.status(500).json({
                 status: 'error',
                 message: 'Error interno del servidor',
@@ -51,7 +51,6 @@ const analyzeFile = async (req, res) => {
             });
         }
 
-        // Verificar si hay archivo
         if (!req.file) {
             return res.status(400).json({
                 status: 'error',
@@ -61,15 +60,25 @@ const analyzeFile = async (req, res) => {
         }
 
         try {
-            console.log('Iniciando análisis del archivo:', req.file.path);
-            const results = await documentAnalyzer.analyzeDocument(req.file.path);
-            
+            const analysisResults = await documentAnalyzer.analyzeDocument(req.file.path);
+            const accessibilityIssues = accessibilityValidator.validate(analysisResults);
+
+            if (accessibilityIssues.length > 0) {
+                return res.status(200).json({
+                    status: 'success',
+                    message: 'El documento contiene problemas de accesibilidad',
+                    issues: accessibilityIssues
+                });
+            }
+
+            const accessibleDocumentPath = await documentExporter.exportAccessibleDocument(req.file.path, analysisResults);
+
             res.status(200).json({
                 status: 'success',
-                data: results
+                message: 'El documento es accesible',
+                accessibleDocumentPath
             });
         } catch (err) {
-            console.error('Error en analyzeFile:', err);
             res.status(500).json({
                 status: 'error',
                 message: 'Error al analizar el documento',
