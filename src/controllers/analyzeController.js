@@ -1,6 +1,7 @@
+// C:\Users\Jessy\source\repos\accessibility-backend\src\controllers\analyzeController.js
 const { scanPage } = require('../services/accessibilityScanner');
 
-exports.analyzeURL = async (req, res) => {
+exports.analyzeURL = async (req, res, next) => {
     const { url } = req.body;
 
     if (!url) {
@@ -29,12 +30,6 @@ exports.analyzeURL = async (req, res) => {
             data: results
         });
     } catch (err) {
-        console.error('Error analyzing URL:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Error al analizar la página',
-            code: 'SCAN_ERROR',
-            details: err.message
-        });
+        next(err);
     }
 };
