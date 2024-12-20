@@ -4,7 +4,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const analyzeRoutes = require('./routes/analyze');
-const documentAnalysisRoutes = require('./routes/documentAnalysis');
 require('dotenv').config();
 
 const app = express();
@@ -29,11 +28,10 @@ app.use(bodyParser.json());
 
 // Rutas
 app.use('/api', analyzeRoutes);
-app.use('/api/documents', documentAnalysisRoutes);
 
 // Health check endpoint
 app.get('/', (req, res) => {
-    res.send('API de accesibilidad y análisis de documentos funcionando');
+    res.send('API de accesibilidad funcionando');
 });
 
 // Basic error handler

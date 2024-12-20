@@ -2,7 +2,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const documentAnalysisRoutes = require('./routes/documentAnalysis');
 const analyzeRoutes = require('./routes/analyze');
 
 const app = express();
@@ -24,7 +23,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Rutas
-app.use('/api', documentAnalysisRoutes);
 app.use('/api', analyzeRoutes);
 
 const PORT = process.env.PORT || 3000;
