@@ -1,10 +1,12 @@
+require('dotenv').config();
 const { DocumentAnalysisClient } = require("@azure/ai-form-recognizer");
 const { AzureKeyCredential } = require("@azure/ai-form-recognizer");
 
 class DocumentAnalyzerService {
     constructor() {
-        this.endpoint = process.env.AZURE_DOCUMENT_ENDPOINT || "https://documentazurewcga.cognitiveservices.azure.com/";
-        this.apiKey = process.env.AZURE_DOCUMENT_KEY || "3aXTGUZpix7yPv4HdFZhe5JzKCNENI6qoGGu18BCnHfxPTT6noS4JQQJ99ALACZoyfiXJ3w3AAALACOGCpPF";
+        this.endpoint = process.env.AZURE_DOCUMENT_ENDPOINT;
+        this.apiKey = process.env.AZURE_DOCUMENT_KEY;
+        
         
         console.log('Inicializando DocumentAnalyzerService');
         console.log(`Endpoint: ${this.endpoint}`);
