@@ -1,9 +1,9 @@
-// C:\Users\Jessy\source\repos\accessibility-backend\src\app.js
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const analyzeRoutes = require('./routes/analyze');
+const documentRoutes = require('./routes/document');
 require('dotenv').config();
 
 const app = express();
@@ -26,8 +26,13 @@ app.use(helmet());
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
+// Configurar límite de tamaño para documentos
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 // Rutas
 app.use('/api', analyzeRoutes);
+app.use('/api', documentRoutes);
 
 // Health check endpoint
 app.get('/', (req, res) => {
