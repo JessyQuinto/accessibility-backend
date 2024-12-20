@@ -1,3 +1,4 @@
+//C:\Users\Jessy\source\repos\accessibility-backend\src\routes\document.js
 const express = require('express');
 const multer = require('multer');
 const { analyzeDocument, analyzeDocumentUpload, testConnection } = require('../controllers/documentController');
@@ -18,6 +19,5 @@ router.get('/test-document-service', testConnection);
 router.post('/analyze-document', analyzeDocument);
 
 // Ruta para analizar documento subido
-router.post('/analyze-document-upload', upload.single('document'), analyzeDocumentUpload);
-
+router.post('/analyze-document-upload', upload.single('file'), analyzeDocumentUpload);
 module.exports = router;
