@@ -8,12 +8,25 @@ require('dotenv').config();
 
 const app = express();
 
-// Basic middleware
+// Configuración de CORS
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:8080'];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Origen no permitido por CORS'));
+        }
+    },
+    credentials: true,
+};
+
+// Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-// Routes
+// Rutas
 app.use('/api', analyzeRoutes);
 app.use('/api/documents', documentAnalysisRoutes);
 
