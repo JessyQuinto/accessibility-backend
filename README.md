@@ -35,6 +35,25 @@ npm run dev
 ```
 This will start the server using Nodemon, which automatically restarts the server on file changes.
 
+## Uso de Credenciales para Configuración
+
+Para el correcto funcionamiento del proyecto, es necesario configurar las credenciales correspondientes en el archivo `.env`. Asegúrese de proporcionar las credenciales del servicio que esté utilizando. Las variables requeridas son:
+
+```env
+BLOB_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=<NOMBRE_DEL_SERVICIO_BLOB>;AccountKey=<CLAVE_DEL_SERVICIO_BLOB>;EndpointSuffix=core.windows.net"
+AZURE_DOCUMENT_KEY=<CLAVE_DEL_SERVICIO_AZURE_DOCUMENT>
+```
+
+### Notas Importantes
+
+1. **BLOB_CONNECTION_STRING**: Debe contener la cadena de conexión para su cuenta de almacenamiento de Azure Blob. Reemplace `<NOMBRE_DEL_SERVICIO_BLOB>` con el nombre de su cuenta de Blob y `<CLAVE_DEL_SERVICIO_BLOB>` con la clave correspondiente.
+
+2. **AZURE_DOCUMENT_KEY**: Reemplace `<CLAVE_DEL_SERVICIO_AZURE_DOCUMENT>` con la clave proporcionada para su servicio de documentos de Azure.
+
+> **Nota:** Estas credenciales son sensibles y no deben ser compartidas ni incluidas en el control de versiones. Se recomienda agregarlas al archivo `.gitignore` y almacenar una copia segura en un sistema de gestión de secretos si es necesario.
+
+
+
 ## Endpoints
 
 - **POST /api/analyze**
