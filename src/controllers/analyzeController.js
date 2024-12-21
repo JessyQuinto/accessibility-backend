@@ -53,8 +53,9 @@ exports.analyzeURL = async (req, res, next) => {
             formattedResults
         );
 
-        // Send report name to Azure Function
+        // Send report name to Azure Function and get recommendations
         console.log('Enviando nombre del reporte a Azure Function:', blobName);
+        let recommendations = null;
         try {
             const functionResponse = await axios.post(
                 'https://wcag-audit.azurewebsites.net/api/wcag_recommendation',
@@ -67,14 +68,28 @@ exports.analyzeURL = async (req, res, next) => {
                     }
                 }
             );
-            console.log('Respuesta de Azure Function:', functionResponse.data);
+            console.log('Respuesta de Azure Function recibida:', functionResponse.data);
+            recommendations = functionResponse.data;
         } catch (functionError) {
-            console.error('Error al enviar nombre del reporte a Azure Function:', functionError);
-            // No detenemos el proceso principal si falla esta llamada
+            console.error('Error al obtener recomendaciones de Azure Function:', functionError);
+            recommendations = {
+                error: 'No se pudieron obtener las recomendaciones',
+                details: functionError.message
+            };
         }
 
+        // Combinar los resultados del análisis con las recomendaciones
+        const finalResponse = {
+            status: 'success',
+            data: {
+                violations: scanResults.violations,
+                recommendations: recommendations,
+                reportId: blobName
+            }
+        };
+
         console.log('Escaneo completado y resultados almacenados');
-        res.status(200).json(formattedResults);
+        res.status(200).json(finalResponse);
     } catch (err) {
         console.error('Error durante el proceso:', err);
         res.status(500).json({
