@@ -40,7 +40,7 @@ This will start the server using Nodemon, which automatically restarts the serve
 Para el correcto funcionamiento del proyecto, es necesario configurar las credenciales correspondientes en el archivo `.env`. Asegúrese de proporcionar las credenciales del servicio que esté utilizando. Las variables requeridas son:
 
 ```env
-BLOB_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=<NOMBRE_DEL_SERVICIO_BLOB>;AccountKey=<CLAVE_DEL_SERVICIO_BLOB>;EndpointSuffix=core.windows.net"
+BLOB_CONNECTION_STRING="Blobstorage Key"
 AZURE_DOCUMENT_KEY=<CLAVE_DEL_SERVICIO_AZURE_DOCUMENT>
 ```
 
