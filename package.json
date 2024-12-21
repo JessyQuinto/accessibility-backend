@@ -10,7 +10,9 @@
   "dependencies": {
     "@azure/ai-form-recognizer": "^4.0.0",
     "@azure/core-auth": "^1.9.0",
+    "@azure/storage-blob": "^12.26.0",
     "axe-core": "^4.10.2",
+    "axios": "^1.7.9",
     "body-parser": "^1.20.3",
     "bull": "^4.16.5",
     "cors": "^2.8.5",
